@@ -1,8 +1,10 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import Title from '../components/ui/title';
 import { useState, useEffect } from "react";
 import NumberContainer from '../components/game/NumberContainer';
 import PrimaryButton from "@/components/ui/PrimaryButton";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import GuessLogItem from '../components/game/GuessLogItem';
 
 
 
@@ -23,12 +25,18 @@ let maxBoundary = 100;
 function GameScreen({userNumber, onGameOver}){
     const initialGuess = generateRandomNumber(1,100,userNumber)
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
+    const [guessRounds, setGuessRounds] = useState([initialGuess]);
 
     useEffect(()=>{
         if (currentGuess===userNumber){
-            onGameOver();
+            onGameOver(guessRounds.length);
         }
     },[currentGuess,userNumber,onGameOver])
+
+    useEffect(()=>{
+        minBoundary = 1;
+        maxBoundary = 100;
+    },[])
 
     function nextGuessHandlerFunction(direction){
 
@@ -45,7 +53,10 @@ function GameScreen({userNumber, onGameOver}){
         }
         const newRndNumber = generateRandomNumber(minBoundary,maxBoundary,-1)
         setCurrentGuess(newRndNumber);
+        setGuessRounds(prevGuessRounds => [newRndNumber,...prevGuessRounds])
     }
+
+    const guessRoundsListLength = guessRounds.length;
 
     return( 
     <View style={styles.screen}>
@@ -54,14 +65,18 @@ function GameScreen({userNumber, onGameOver}){
         <View>
             <Text>Higher or Lower?</Text>
             <View>
-            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"lower")}>-</PrimaryButton>
-            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"upper")}>+</PrimaryButton>
+            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"lower")}>
+            <MaterialCommunityIcons name="minus-thick" size={24} color="white" />
+            </PrimaryButton>
+            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"upper")}>
+            <MaterialCommunityIcons name="plus-thick" size={24} color="white" />
+            </PrimaryButton>
+            </View>
+            <View>
+                <FlatList data={guessRounds} renderItem={(itemData)=> <GuessLogItem roundNumber={guessRoundsListLength-itemData.index} guess={itemData.item} />} keyExtractor={(item)=>item}/>
             </View>
         </View>
-        <View>
-            <Text>Log rounds</Text>
-        </View>
-    </View>
+    </View> 
     );
 }
 
@@ -73,5 +88,8 @@ const styles = StyleSheet.create({
         flex:1,
         padding:24
     },
-
+    listContainer:{
+        flex:1,
+        padding:16
+    }
 })

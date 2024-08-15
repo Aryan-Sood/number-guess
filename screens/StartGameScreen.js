@@ -1,8 +1,9 @@
-import { TextInput, View, StyleSheet, Alert } from "react-native"
+import { TextInput, View, StyleSheet, Alert, Text } from "react-native"
 import PrimaryButton from "../components/ui/PrimaryButton";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import Colors from "@/constants/Colors";
+import Title from "@/components/ui/title";
 
 function StartGameScreen({onPickNumber}){
 
@@ -31,8 +32,10 @@ function StartGameScreen({onPickNumber}){
     return (
     <>
     <StatusBar style="inverted"/>
+    <View style={styles.rootContainer}>
+        <Title>Guess my Number</Title>
     <View style={styles.inputContainer}>
-
+        <Text style={styles.instructionText}>Enter a Number</Text>
         <TextInput style = {styles.numberInput}
         maxLength={2}
         keyboardType="number-pad"
@@ -49,6 +52,7 @@ function StartGameScreen({onPickNumber}){
             </View>
         </View>
     </View>
+    </View>
     </>
     );
 }
@@ -58,11 +62,16 @@ export default StartGameScreen;
 
 
 const styles = StyleSheet.create({
+    rootContainer:{
+        flex:1,
+        marginTop:100,
+        alignItems:"center"
+    },
     inputContainer:{
       justifyContent:'center',
       alignItems:'center',
       padding: 16,
-      marginTop:100,
+      marginTop:36,
       marginHorizontal:24,
       backgroundColor:Colors.primary800,
       borderRadius:8,
@@ -80,7 +89,7 @@ const styles = StyleSheet.create({
         fontSize:32,
         borderBottomColor:Colors.accent500,
         borderBottomWidth:2,
-        color: Colors.accent500,
+        color: Colors.accent500 ,
         marginVertical:8,
         fontWeight:'bold'
     },
@@ -91,5 +100,10 @@ const styles = StyleSheet.create({
         flex:1,
         justifyContent:"center",
         alignItems:"center"
+    },
+    instructionText:{
+        fontFamily:'open-sans',
+        color:Colors.accent500,
+        fontSize:24
     }
   })

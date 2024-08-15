@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     ButtonInnerContainer:{
         backgroundColor:Colors.primary500,
         paddingVertical:8,
+        borderRadius:20,
         paddingHorizontal:16,
         elevation:2,
         marginVertical:5,
