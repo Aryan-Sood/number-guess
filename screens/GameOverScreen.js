@@ -1,10 +1,11 @@
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Title from "@/components/ui/title";
 import Colors from "@/constants/Colors";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
 function GameOver({roundsNumber, userNumber, onStartNewGame}){
     return (
+        <ScrollView bounces={false}>
         <View style={styles.rootContainer}>
             <Title>Game Over!</Title>
             <View style={styles.imageContainer}>
@@ -13,18 +14,21 @@ function GameOver({roundsNumber, userNumber, onStartNewGame}){
             <Text style={styles.summaryText}>Your phone needed <Text style={styles.highlight}>{roundsNumber}</Text> rounds to guess the number <Text  style={styles.highlight}>{userNumber}</Text></Text>
             <PrimaryButton onPress={onStartNewGame}>Start new game</PrimaryButton>
         </View>
+        </ScrollView>
     );
 }
 
 
 export default GameOver;
 
+const deviceWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
     imageContainer:{
         borderRadius:150,
-        height:300,
-        width:300,
-        borderWidth:3,
+        height: deviceWidth < 380 ? 150 : 300,
+        width: deviceWidth < 380 ? 150 : 300,
+        borderWidth: 3,
         borderColor:Colors.primary800,
         overflow:"hidden",
         margin:36

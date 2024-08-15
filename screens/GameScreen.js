@@ -1,4 +1,4 @@
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 import Title from '../components/ui/title';
 import { useState, useEffect } from "react";
 import NumberContainer from '../components/game/NumberContainer';
@@ -26,6 +26,7 @@ function GameScreen({userNumber, onGameOver}){
     const initialGuess = generateRandomNumber(1,100,userNumber)
     const [currentGuess, setCurrentGuess] = useState(initialGuess);
     const [guessRounds, setGuessRounds] = useState([initialGuess]);
+    const{width, height} =  useWindowDimensions();
 
     useEffect(()=>{
         if (currentGuess===userNumber){
@@ -58,9 +59,7 @@ function GameScreen({userNumber, onGameOver}){
 
     const guessRoundsListLength = guessRounds.length;
 
-    return( 
-    <View style={styles.screen}>
-        <Title>Opponent's Guess</Title>
+    let content = <>
         <NumberContainer>{currentGuess}</NumberContainer>
         <View>
             <Text>Higher or Lower?</Text>
@@ -76,6 +75,31 @@ function GameScreen({userNumber, onGameOver}){
                 <FlatList data={guessRounds} renderItem={(itemData)=> <GuessLogItem roundNumber={guessRoundsListLength-itemData.index} guess={itemData.item} />} keyExtractor={(item)=>item}/>
             </View>
         </View>
+    </>
+
+    if (width>500){
+        content = <>
+        <Text>Higher or Lower?</Text>
+        <View>
+            <View>
+            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"lower")}>
+            <MaterialCommunityIcons name="minus-thick" size={24} color="white" />
+            </PrimaryButton>
+            </View>
+            <NumberContainer>{currentGuess}</NumberContainer>
+            <View>
+            <PrimaryButton onPress={nextGuessHandlerFunction.bind(this,"upper")}>
+            <MaterialCommunityIcons name="plus-thick" size={24} color="white" />
+            </PrimaryButton>
+            </View>
+        </View>
+        </>
+    }
+
+    return( 
+    <View style={styles.screen}>
+        <Title>Opponent's Guess</Title>
+        {content}
     </View> 
     );
 }
